@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tłumacz GPT</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Roboto", sans-serif;
+        margin: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tłumacz GPT</h1>
+
+    <div>
+      <label for="apiKey">Klucz API:</label>
+      <input type="text" id="apiKey" />
+    </div>
+
+    <textarea id="inputText" placeholder="Wprowadź tekst..."></textarea>
+
+    <div>
+      <h3>Wybierz języki do tłumaczenia:</h3>
+      <label>
+        <input type="checkbox" id="translateCzech" checked /> Czeski
+      </label>
+      <label>
+        <input type="checkbox" id="translateRomanian" checked /> Rumuński
+      </label>
+      <label>
+        <input type="checkbox" id="translateSlovak" checked /> Słowacki
+      </label>
+      <label>
+        <input type="checkbox" id="translateSlovenian" checked /> Słoweński
+      </label>
+      <label>
+        <input type="checkbox" id="translateHungarian" checked /> Węgierski
+      </label>
+      <label>
+        <input type="checkbox" id="translateLithuanian" checked /> Litewski
+      </label>
+      <label>
+        <input type="checkbox" id="translateGerman" checked /> Niemiecki
+      </label>
+    </div>
+
+    <div>
+      <h3>Wybierz typ treści:</h3>
+      <label>
+        <input type="radio" name="contentType" value="newsletter" checked />
+        Newsletter
+      </label>
+      <label>
+        <input type="radio" name="contentType" value="socialMedia" /> Social
+        Media
+      </label>
+      <label>
+        <input type="radio" name="contentType" value="general" /> Ogólne
+      </label>
+    </div>
+
+    <button id="translateButton">Tłumacz</button>
+
+    <div class="output-container">
+      <div class="output-field">
+        <h2>Czeski</h2>
+        <button class="copy-button" data-target="outputCzech">Kopiuj</button>
+        <textarea id="outputCzech" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Rumuński</h2>
+        <button class="copy-button" data-target="outputRomanian">Kopiuj</button>
+        <textarea id="outputRomanian" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Słowacki</h2>
+        <button class="copy-button" data-target="outputSlovak">Kopiuj</button>
+        <textarea id="outputSlovak" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Słoweński</h2>
+        <button class="copy-button" data-target="outputSlovenian">
+          Kopiuj
+        </button>
+        <textarea id="outputSlovenian" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Węgierski</h2>
+        <button class="copy-button" data-target="outputHungarian">
+          Kopiuj
+        </button>
+        <textarea id="outputHungarian" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Litewski</h2>
+        <button class="copy-button" data-target="outputLithuanian">
+          Kopiuj
+        </button>
+        <textarea id="outputLithuanian" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Niemiecki</h2>
+        <button class="copy-button" data-target="outputGerman">Kopiuj</button>
+        <textarea id="outputGerman" readonly></textarea>
+      </div>
+    </div>
+
+    <script>
+      const translateButton = document.getElementById("translateButton");
+      const outputFields = document.querySelectorAll(
+        ".output-container textarea"
+      );
+
+      translateButton.addEventListener("click", async () => {
+        const apiKey = document.getElementById("apiKey").value;
+        if (!apiKey) {
+          alert("Wprowadź poprawny klucz API.");
+          return;
+        }
+
+        const inputText = document.getElementById("inputText").value;
+        const languages = [
+          {
+            id: "czeski",
+            checkboxId: "translateCzech",
+            label: "Czeski",
+          },
+          {
+            id: "rumuński",
+            checkboxId: "translateRomanian",
+            label: "Rumuński",
+          },
+          {
+            id: "słowacki",
+            checkboxId: "translateSlovak",
+            label: "Słowacki",
+          },
+          {
+            id: "słoweński",
+            checkboxId: "translateSlovenian",
+            label: "Słoweński",
+          },
+          {
+            id: "węgierski",
+            checkboxId: "translateHungarian",
+            label: "Węgierski",
+          },
+          {
+            id: "litewski",
+            checkboxId: "translateLithuanian",
+            label: "Litewski",
+          },
+          {
+            id: "niemiecki",
+            checkboxId: "translateGerman",
+            label: "Niemiecki",
+          },
+        ];
+
+        const selectedLanguages = languages.filter((language) => {
+          const checkbox = document.getElementById(language.checkboxId);
+          return checkbox.checked;
+        });
+
+        const contentType = document.querySelector(
+          'input[name="contentType"]:checked'
+        ).value;
+
+        for (const language of selectedLanguages) {
+          const outputField =
+            outputFields[
+              languages.findIndex((lang) => lang.id === language.id)
+            ];
+
+          let prompt = `Tłumacz tekst`;
+          if (contentType === "newsletter") {
+            prompt += ` przeznaczony do newslettera sklepu górskiego z języka polskiego na ${language.label}:`;
+          } else if (contentType === "socialMedia") {
+            prompt += ` przeznaczony do postu na social media sklepu górskiego z języka polskiego na ${language.label}:`;
+          } else {
+            prompt += ` z języka polskiego na ${language.label}:`;
+          }
+
+          let translation = await translateText(
+            inputText,
+            prompt,
+            language.id,
+            apiKey
+          );
+
+          outputField.value = translation;
+        }
+      });
+
+      async function translateText(text, prompt, targetLanguage, apiKey) {
+        const apiUrl = `https://api.openai.com/v1/chat/completions`;
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        };
+
+        const data = {
+          messages: [
+            { role: "system", content: `${prompt}` },
+            { role: "user", content: text },
+          ],
+          model: "gpt-3.5-turbo",
+        };
+
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (result.choices === undefined) {
+          return "ZŁY KLUCZ API!";
+        }
+        return result.choices[0].message.content;
+      }
+
+      // Obsługa kopiowania do schowka
+      const copyButtons = document.querySelectorAll(".copy-button");
+      copyButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const targetId = button.getAttribute("data-target");
+          const targetField = document.getElementById(targetId);
+
+          targetField.select();
+          document.execCommand("copy");
+        });
+      });
+    </script>
+  </body>
+</html>
