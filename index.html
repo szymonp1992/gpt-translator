@@ -50,6 +50,12 @@
       <label>
         <input type="checkbox" id="translateGerman" checked /> Niemiecki
       </label>
+      <label>
+        <input type="checkbox" id="translateGerman" checked /> Chorwacki
+      </label>
+      <label>
+        <input type="checkbox" id="translateGerman" checked /> Bułgarski
+      </label>
     </div>
 
     <div>
@@ -111,6 +117,16 @@
         <button class="copy-button" data-target="outputGerman">Kopiuj</button>
         <textarea id="outputGerman" readonly></textarea>
       </div>
+      <div class="output-field">
+        <h2>Chorwacki</h2>
+        <button class="copy-button" data-target="outputGerman">Kopiuj</button>
+        <textarea id="outputGerman" readonly></textarea>
+      </div>
+      <div class="output-field">
+        <h2>Bułgarski</h2>
+        <button class="copy-button" data-target="outputGerman">Kopiuj</button>
+        <textarea id="outputGerman" readonly></textarea>
+      </div>
     </div>
 
     <script>
@@ -162,6 +178,16 @@
             id: "niemiecki",
             checkboxId: "translateGerman",
             label: "Niemiecki",
+          },
+          {
+            id: "chorwacki",
+            checkboxId: "translateCroatian",
+            label: "Chorwacki",
+          },
+          {
+            id: "bułgarski",
+            checkboxId: "translateBulgarian",
+            label: "Bułgarski",
           },
         ];
 
