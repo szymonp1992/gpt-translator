@@ -56,6 +56,9 @@
       <label>
         <input type="checkbox" id="translateBulgarian" checked /> Bułgarski
       </label>
+      <label>
+        <input type="checkbox" id="translateUkrainian" checked /> Ukraiński
+      </label>
     </div>
 
     <div>
@@ -127,6 +130,11 @@
         <button class="copy-button" data-target="outputBulgarian">Kopiuj</button>
         <textarea id="outputBulgarian" readonly></textarea>
       </div>
+      <div class="output-field">
+        <h2>Ukraiński</h2>
+        <button class="copy-button" data-target="outputUkrainian">Kopiuj</button>
+        <textarea id="outputUkrainian" readonly></textarea>
+      </div>
     </div>
 
     <script>
@@ -188,6 +196,11 @@
             id: "bułgarski",
             checkboxId: "translateBulgarian",
             label: "Bułgarski",
+          },
+          {
+            id: "ukraiński",
+            checkboxId: "translateUkrainian",
+            label: "Ukraiński",
           },
         ];
 
